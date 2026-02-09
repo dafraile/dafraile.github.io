@@ -15,11 +15,11 @@ export const ProfileSection: React.FC = () => {
         <div className="flex items-center gap-2 font-mono text-lg text-gray-600 dark:text-gray-400">
           <span className="text-black dark:text-white font-bold">&gt;</span>
           <p className="typing-effect">
-            Academic. Creator. Coder.
+            Physician. Researcher. Builder.
           </p>
         </div>
         <p className="mt-4 font-mono text-sm text-gray-500 max-w-2xl">
-          Exploring the boundaries between public health science and digital technology.
+          Postdoctoral Research Fellow in Generative AI at Macquarie University. MBBS, PhD.
         </p>
       </div>
 
@@ -45,6 +45,10 @@ export const ProfileSection: React.FC = () => {
               <ExternalLink size={18} />
               <span className="font-mono text-sm group-hover:translate-x-2 transition-transform">Google Scholar</span>
             </a>
+             <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+              <Terminal size={18} />
+              <span className="font-mono text-sm group-hover:translate-x-2 transition-transform">Hugging Face</span>
+            </a>
           </div>
         </div>
 
@@ -57,7 +61,7 @@ export const ProfileSection: React.FC = () => {
               <span className="text-blue-600 dark:text-blue-400">function</span> <span className="text-yellow-600 dark:text-yellow-400">aboutMe</span>() &#123;
             </p>
             <p className="pl-4 text-gray-600 dark:text-gray-300">
-              return "I specialize in epidemiology and the application of modern coding practices to academic research. My work involves building reproducible data pipelines, visualizing complex health data, and publishing research that bridges the gap between traditional medicine and computer science.";
+              return "I'm a doctor who codes. I research how large language models and generative AI can transform clinical practice—from documentation to decision-making. My work spans NLP for medical text, clinical dialogue summarization, and the ethics of AI in healthcare. I also helped build Australia's COVID-19 living guidelines.";
             </p>
             <p>&#125;</p>
           </div>
