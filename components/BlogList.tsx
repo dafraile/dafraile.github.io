@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BLOG_POSTS } from '../constants';
 import { BlogPost } from '../types';
-import { ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ChevronRight, ExternalLink } from 'lucide-react';
 
 export const BlogList: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
@@ -41,7 +41,19 @@ export const BlogList: React.FC = () => {
             ))}
           </div>
           
-          <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex justify-end">
+          <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center">
+            {selectedPost.externalLink ? (
+              <a
+                href={selectedPost.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black px-3 py-2 border border-current transition-colors"
+              >
+                Read on AI Health Alliance <ExternalLink size={12} />
+              </a>
+            ) : (
+              <span></span>
+            )}
             <span className="font-mono text-xs animate-pulse">_END_OF_FILE</span>
           </div>
         </article>
