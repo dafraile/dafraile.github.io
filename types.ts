@@ -23,6 +23,7 @@ export interface BlogPost {
   summary: string;
   content: string[]; // Array of paragraphs for simplicity
   tags: string[];
+  externalLink?: string; // Link to original publication
 }
 
 export interface Project {
