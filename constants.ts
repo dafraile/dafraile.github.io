@@ -5,7 +5,8 @@ export const SOCIAL_LINKS = {
   scholar: 'https://scholar.google.com/citations?user=7MIdOf0AAAAJ&hl=en',
   twitter: 'https://twitter.com/dafraile',
   github: 'https://github.com/dafraile',
-  huggingface: 'https://huggingface.co/dafraile'
+  huggingface: 'https://huggingface.co/dafraile',
+  linkedin: 'https://www.linkedin.com/in/david-fraile-navarro-660344b7/'
 };
 
 export const PUBLICATIONS: Publication[] = [

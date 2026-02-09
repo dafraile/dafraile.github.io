@@ -5,7 +5,8 @@ import {
   Twitter,
   Github,
   ExternalLink,
-  Terminal
+  Terminal,
+  Linkedin
 } from 'lucide-react';
 import { PublicationList } from './components/PublicationList';
 import { BlogList } from './components/BlogList';
@@ -81,22 +82,31 @@ const App: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Social Links - Horizontal */}
-                <div className="flex flex-wrap gap-4 text-sm">
-                  <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Twitter">
-                    <Twitter size={18} />
+                {/* Social Links - Horizontal with labels */}
+                <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                  <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <Twitter size={16} />
+                    <span>Twitter</span>
                   </a>
-                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="GitHub">
-                    <Github size={18} />
+                  <a href={SOCIAL_LINKS.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <Linkedin size={16} />
+                    <span>LinkedIn</span>
                   </a>
-                  <a href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Google Scholar">
-                    <ExternalLink size={18} />
+                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <Github size={16} />
+                    <span>GitHub</span>
                   </a>
-                  <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="ORCID">
-                    <div className="w-5 h-5 flex items-center justify-center font-bold text-[9px] border border-current">iD</div>
+                  <a href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <ExternalLink size={16} />
+                    <span>Scholar</span>
                   </a>
-                  <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Hugging Face">
-                    <Terminal size={18} />
+                  <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <div className="w-4 h-4 flex items-center justify-center font-bold text-[8px] border border-current">iD</div>
+                    <span>ORCID</span>
+                  </a>
+                  <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+                    <Terminal size={16} />
+                    <span>HuggingFace</span>
                   </a>
                 </div>
               </div>
