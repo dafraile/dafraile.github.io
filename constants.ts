@@ -68,20 +68,34 @@ export const PUBLICATIONS: Publication[] = [
 export const PROJECTS: Project[] = [
   {
     id: 'pr1',
+    name: 'octOpus-bot',
+    description: 'A customized fork of Claude Code CLI with persistent agent memory, Discord integration, and multi-session coordination. Built for autonomous AI research workflows.',
+    techStack: ['TypeScript', 'Node.js', 'Claude API', 'Discord.js'],
+    github: 'https://github.com/dafraile/octOpus-bot'
+  },
+  {
+    id: 'pr2',
+    name: 'Clinical-Dialogue-Summarization',
+    description: 'Scripts and pipelines for fine-tuning transformer models (BART, T5) on medical dialogue summarization tasks. Includes data preprocessing and evaluation tools.',
+    techStack: ['Python', 'PyTorch', 'Transformers', 'Shell'],
+    github: 'https://github.com/dafraile/Clinical-Dialogue-Summarization'
+  },
+  {
+    id: 'pr3',
     name: 'Clini-dialog-sum-BART',
     description: 'Fine-tuned BART model for clinical dialogue summarization. Trained to generate concise summaries of doctor-patient conversations for medical documentation.',
     techStack: ['PyTorch', 'Transformers', 'BART', 'NLP'],
     github: 'https://huggingface.co/dafraile/Clini-dialog-sum-BART'
   },
   {
-    id: 'pr2',
+    id: 'pr4',
     name: 'Clini-dialog-sum-T5',
     description: 'T5-based model optimized for summarizing clinical dialogues. Designed for healthcare settings where efficient documentation is critical.',
     techStack: ['PyTorch', 'Transformers', 'T5', 'NLP'],
     github: 'https://huggingface.co/dafraile/Clini-dialog-sum-T5'
   },
   {
-    id: 'pr3',
+    id: 'pr5',
     name: 'dafraile.github.io',
     description: 'Personal portfolio website built with React and Vite. Features a minimalist design with dark mode support and an AI chat assistant.',
     techStack: ['React', 'TypeScript', 'Vite', 'Tailwind'],
