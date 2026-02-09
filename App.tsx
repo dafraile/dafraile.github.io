@@ -1,35 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Sun, 
-  Moon, 
-  BookOpen, 
-  Code, 
-  FileText, 
-  User, 
-  Menu,
-  X,
+import {
+  Sun,
+  Moon,
+  BookOpen,
+  Code,
+  Twitter,
+  Github,
+  ExternalLink,
   Terminal
 } from 'lucide-react';
-import { ProfileSection } from './components/ProfileSection';
 import { PublicationList } from './components/PublicationList';
 import { BlogList } from './components/BlogList';
 import { ProjectList } from './components/ProjectList';
+import { BLOG_POSTS, SOCIAL_LINKS } from './constants';
 import { ViewState } from './types';
 
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  // Default to BLOG (Journal) view as requested
-  const [currentView, setCurrentView] = useState<ViewState>(ViewState.BLOG);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [currentView, setCurrentView] = useState<ViewState>(ViewState.HOME);
 
-  // Initialize theme based on preference
   useEffect(() => {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setDarkMode(true);
     }
   }, []);
 
-  // Apply dark mode class to html element
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -42,8 +37,6 @@ const App: React.FC = () => {
 
   const renderContent = () => {
     switch (currentView) {
-      case ViewState.HOME:
-        return <ProfileSection />;
       case ViewState.RESEARCH:
         return <PublicationList />;
       case ViewState.BLOG:
@@ -51,101 +44,182 @@ const App: React.FC = () => {
       case ViewState.CODING:
         return <ProjectList />;
       default:
-        return <BlogList />;
+        return null;
     }
   };
 
-  const NavItem = ({ view, icon: Icon, label }: { view: ViewState; icon: any; label: string }) => (
-    <button
-      onClick={() => {
-        setCurrentView(view);
-        setIsMobileMenuOpen(false);
-      }}
-      className={`group flex items-center gap-3 px-4 py-3 w-full text-left transition-all duration-200 border-l-4 font-mono uppercase tracking-widest text-xs ${
-        currentView === view
-          ? 'border-black dark:border-white bg-gray-100 dark:bg-gray-900 font-bold pl-6'
-          : 'border-transparent text-gray-500 hover:text-black dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900/50 hover:pl-6 hover:border-gray-300 dark:hover:border-gray-700'
-      }`}
-    >
-      <Icon size={16} className={currentView === view ? "stroke-[2.5]" : "stroke-[1.5]"} />
-      <span>{label}</span>
-      {currentView === view && (
-        <span className="ml-auto opacity-0 group-hover:opacity-100 animate-pulse text-[10px]">&lt;ACTIVE&gt;</span>
-      )}
-    </button>
-  );
+  const latestPost = BLOG_POSTS[0];
+  const secondPost = BLOG_POSTS[1];
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row font-mono bg-white dark:bg-black text-black dark:text-white">
-      {/* Sidebar Navigation */}
-      <aside className={`
-        fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-black border-r-2 border-black dark:border-white transform transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:translate-x-0
-      `}>
-        <div className="p-8 flex flex-col h-full justify-between relative">
-          {/* Decorative corner markers */}
-          <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-black dark:border-white"></div>
-          <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-black dark:border-white"></div>
-          <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-black dark:border-white"></div>
-          <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-black dark:border-white"></div>
+    <div className="min-h-screen font-mono bg-white dark:bg-black text-black dark:text-white">
+      {/* Dark mode toggle - floating top right */}
+      <button
+        onClick={toggleTheme}
+        className="fixed top-6 right-6 z-50 p-3 border border-gray-300 dark:border-gray-700 bg-white dark:bg-black hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+        aria-label="Toggle theme"
+      >
+        {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+      </button>
 
-          <div>
-            <div className="mb-12 pt-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Terminal size={24} className="animate-pulse" />
-                <h1 className="text-2xl font-sans font-bold tracking-tighter uppercase">DFN_SYS.v1</h1>
+      {/* Main content area */}
+      <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
+        {currentView === ViewState.HOME ? (
+          <>
+            {/* Hero Section - Profile */}
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 mb-16">
+              {/* Left Column - Name and Links */}
+              <div className="space-y-8">
+                <div className="border-b-2 border-black dark:border-white pb-8">
+                  <h1 className="text-5xl md:text-6xl font-sans font-bold mb-4 tracking-tighter uppercase leading-none">
+                    David<br/>Fraile<br/>Navarro
+                  </h1>
+                  <div className="flex items-center gap-2 font-mono text-lg text-gray-600 dark:text-gray-400 mb-3">
+                    <span className="text-black dark:text-white font-bold">&gt;</span>
+                    <p>Physician. Researcher. Builder.</p>
+                  </div>
+                  <p className="font-mono text-sm text-gray-500">
+                    Postdoctoral Research Fellow in Generative AI at Macquarie University. MBBS, PhD.
+                  </p>
+                </div>
+
+                {/* Social Links */}
+                <div className="space-y-1">
+                  <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
+                    <Twitter size={16} />
+                    <span>@dafraile</span>
+                  </a>
+                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
+                    <Github size={16} />
+                    <span>GitHub</span>
+                  </a>
+                  <a href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
+                    <ExternalLink size={16} />
+                    <span>Google Scholar</span>
+                  </a>
+                  <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
+                    <div className="w-4 h-4 flex items-center justify-center font-bold text-[8px] border border-current">iD</div>
+                    <span>ORCID</span>
+                  </a>
+                  <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
+                    <Terminal size={16} />
+                    <span>Hugging Face</span>
+                  </a>
+                </div>
+
+                {/* Navigation Links */}
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                  <button
+                    onClick={() => setCurrentView(ViewState.RESEARCH)}
+                    className="group flex items-center gap-3 py-2 text-sm uppercase tracking-widest hover:translate-x-2 transition-transform"
+                  >
+                    <BookOpen size={16} />
+                    <span>Research</span>
+                    <span className="text-gray-400 text-xs">[31 papers]</span>
+                  </button>
+                  <button
+                    onClick={() => setCurrentView(ViewState.CODING)}
+                    className="group flex items-center gap-3 py-2 text-sm uppercase tracking-widest hover:translate-x-2 transition-transform"
+                  >
+                    <Code size={16} />
+                    <span>Coding</span>
+                    <span className="text-gray-400 text-xs">[5 projects]</span>
+                  </button>
+                </div>
               </div>
-              <p className="text-[10px] text-gray-500 tracking-[0.2em] uppercase border-t border-gray-200 dark:border-gray-800 pt-2">
-                David Fraile Navarro
-                <br/>
-                <span className="text-gray-400">Status: Online</span>
-              </p>
+
+              {/* Right Column - About Me Box */}
+              <div className="flex items-start">
+                <div className="p-6 md:p-8 border-2 border-black dark:border-white bg-gray-50 dark:bg-gray-900/30 w-full">
+                  <p className="mb-4 text-sm">
+                    <span className="text-blue-600 dark:text-blue-400">function</span> <span className="text-yellow-600 dark:text-yellow-400">aboutMe</span>() &#123;
+                  </p>
+                  <p className="pl-4 text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
+                    return "I'm a doctor who codes. I research how large language models and generative AI can transform clinical practice—from documentation to decision-making. My work spans NLP for medical text, clinical dialogue summarization, and the ethics of AI in healthcare. I also helped build Australia's COVID-19 living guidelines.";
+                  </p>
+                  <p className="mt-4 text-sm">&#125;</p>
+                </div>
+              </div>
             </div>
 
-            <nav className="space-y-1">
-              <NavItem view={ViewState.BLOG} icon={FileText} label="01_JOURNAL" />
-              <NavItem view={ViewState.HOME} icon={User} label="02_PROFILE" />
-              <NavItem view={ViewState.RESEARCH} icon={BookOpen} label="03_RESEARCH" />
-              <NavItem view={ViewState.CODING} icon={Code} label="04_CODING" />
-            </nav>
-          </div>
+            {/* Divider */}
+            <div className="border-t-2 border-black dark:border-white my-12"></div>
 
-          <div className="pt-8 border-t-2 border-gray-100 dark:border-gray-900">
-             <button
-              onClick={toggleTheme}
-              className="w-full flex items-center justify-between px-4 py-3 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all"
+            {/* Blog Articles Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12">
+              {/* Main Article */}
+              {latestPost && (
+                <article className="space-y-6">
+                  <div className="flex items-center gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                    <span>Latest</span>
+                    <span>//</span>
+                    <time>{latestPost.date}</time>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-sans font-bold uppercase tracking-tight leading-tight">
+                    {latestPost.title}
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {latestPost.content[0]}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {latestPost.content[1]}
+                  </p>
+                  <div className="flex flex-wrap gap-4 pt-4">
+                    <button
+                      onClick={() => setCurrentView(ViewState.BLOG)}
+                      className="text-xs font-bold uppercase tracking-widest border border-current px-4 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    >
+                      Read More
+                    </button>
+                    {latestPost.externalLink && (
+                      <a
+                        href={latestPost.externalLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-bold uppercase tracking-widest border border-current px-4 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors inline-flex items-center gap-2"
+                      >
+                        Original <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
+                </article>
+              )}
+
+              {/* Side Article */}
+              {secondPost && (
+                <article className="border-l-2 border-gray-200 dark:border-gray-800 pl-8 space-y-4">
+                  <div className="text-xs font-mono text-gray-500 uppercase tracking-widest">
+                    <time>{secondPost.date}</time>
+                  </div>
+                  <h3 className="text-xl font-sans font-bold uppercase tracking-tight">
+                    {secondPost.title}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                    {secondPost.summary}
+                  </p>
+                  <button
+                    onClick={() => setCurrentView(ViewState.BLOG)}
+                    className="text-xs font-bold uppercase tracking-widest hover:underline"
+                  >
+                    Read &rarr;
+                  </button>
+                </article>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Back button for subpages */}
+            <button
+              onClick={() => setCurrentView(ViewState.HOME)}
+              className="mb-8 text-xs font-mono uppercase tracking-widest text-gray-500 hover:text-black dark:hover:text-white transition-colors flex items-center gap-2"
             >
-              <div className="flex items-center gap-2">
-                {darkMode ? <Sun size={14} /> : <Moon size={14} />}
-                <span>{darkMode ? 'Light' : 'Dark'}</span>
-              </div>
-              <span>[TOGGLE]</span>
+              &larr; Back to Home
             </button>
-          </div>
-        </div>
-      </aside>
-
-      {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 w-full z-40 bg-white dark:bg-black border-b-2 border-black dark:border-white px-6 py-4 flex justify-between items-center">
-        <span className="font-sans font-bold tracking-tighter uppercase">DFN_SYS.v1</span>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? <X /> : <Menu />}
-        </button>
+            {renderContent()}
+          </>
+        )}
       </div>
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto h-screen pt-20 md:pt-0 p-6 md:p-12 lg:p-20 max-w-6xl mx-auto w-full">
-        {renderContent()}
-      </main>
-
-      {/* Overlay for mobile menu */}
-      {isMobileMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black/80 z-30 md:hidden backdrop-blur-sm"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
     </div>
   );
 };
