@@ -54,7 +54,7 @@ export const BlogList: React.FC = () => {
       <div className="border-b-2 border-black dark:border-white pb-6">
         <h2 className="text-4xl font-sans font-bold uppercase tracking-tight">System Journal</h2>
         <p className="font-mono text-sm text-gray-500 mt-2 tracking-wide">
-          > Accessing thoughts on research, code, and infrastructure...
+          &gt; Accessing thoughts on research, code, and infrastructure...
         </p>
       </div>
 

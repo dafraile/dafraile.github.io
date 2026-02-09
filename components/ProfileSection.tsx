@@ -13,7 +13,7 @@ export const ProfileSection: React.FC = () => {
           David<br/>Fraile<br/>Navarro
         </h1>
         <div className="flex items-center gap-2 font-mono text-lg text-gray-600 dark:text-gray-400">
-          <span className="text-black dark:text-white font-bold">></span>
+          <span className="text-black dark:text-white font-bold">&gt;</span>
           <p className="typing-effect">
             Academic. Creator. Coder.
           </p>

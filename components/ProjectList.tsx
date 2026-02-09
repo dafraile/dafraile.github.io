@@ -8,7 +8,7 @@ export const ProjectList: React.FC = () => {
       <div className="border-b-2 border-black dark:border-white pb-6">
         <h2 className="text-4xl font-sans font-bold uppercase tracking-tight">Code Repositories</h2>
         <p className="font-mono text-sm text-gray-500 mt-2 tracking-wide">
-          > Executables and tools built for research utility.
+          &gt; Executables and tools built for research utility.
         </p>
       </div>
 
