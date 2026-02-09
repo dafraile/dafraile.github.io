@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   Sun,
   Moon,
-  BookOpen,
-  Code,
   Twitter,
   Github,
   ExternalLink,
@@ -83,48 +81,23 @@ const App: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Social Links */}
-                <div className="space-y-1">
-                  <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
-                    <Twitter size={16} />
-                    <span>@dafraile</span>
+                {/* Social Links - Horizontal */}
+                <div className="flex flex-wrap gap-4 text-sm">
+                  <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Twitter">
+                    <Twitter size={18} />
                   </a>
-                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
-                    <Github size={16} />
-                    <span>GitHub</span>
+                  <a href={SOCIAL_LINKS.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="GitHub">
+                    <Github size={18} />
                   </a>
-                  <a href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
-                    <ExternalLink size={16} />
-                    <span>Google Scholar</span>
+                  <a href={SOCIAL_LINKS.scholar} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Google Scholar">
+                    <ExternalLink size={18} />
                   </a>
-                  <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
-                    <div className="w-4 h-4 flex items-center justify-center font-bold text-[8px] border border-current">iD</div>
-                    <span>ORCID</span>
+                  <a href={SOCIAL_LINKS.orcid} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="ORCID">
+                    <div className="w-5 h-5 flex items-center justify-center font-bold text-[9px] border border-current">iD</div>
                   </a>
-                  <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-3 py-2 hover:translate-x-2 transition-transform text-sm">
-                    <Terminal size={16} />
-                    <span>Hugging Face</span>
+                  <a href={SOCIAL_LINKS.huggingface} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:opacity-70 transition-opacity" title="Hugging Face">
+                    <Terminal size={18} />
                   </a>
-                </div>
-
-                {/* Navigation Links */}
-                <div className="pt-6 border-t border-gray-200 dark:border-gray-800 space-y-2">
-                  <button
-                    onClick={() => setCurrentView(ViewState.RESEARCH)}
-                    className="group flex items-center gap-3 py-2 text-sm uppercase tracking-widest hover:translate-x-2 transition-transform"
-                  >
-                    <BookOpen size={16} />
-                    <span>Research</span>
-                    <span className="text-gray-400 text-xs">[31 papers]</span>
-                  </button>
-                  <button
-                    onClick={() => setCurrentView(ViewState.CODING)}
-                    className="group flex items-center gap-3 py-2 text-sm uppercase tracking-widest hover:translate-x-2 transition-transform"
-                  >
-                    <Code size={16} />
-                    <span>Coding</span>
-                    <span className="text-gray-400 text-xs">[5 projects]</span>
-                  </button>
                 </div>
               </div>
 
