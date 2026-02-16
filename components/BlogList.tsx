@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ArrowLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { BLOG_POSTS } from '../data/blogPosts';
 import { BlogPost } from '../types';
+
+type BlogListProps = {
+  selectedPostId?: string | null;
+  onSelectPost: (postId: string) => void;
+  onBackToList: () => void;
+};
 
 const formatDate = (isoDate: string): string => {
   const [year, month, day] = isoDate.split('-').map(Number);
@@ -13,14 +19,16 @@ const formatDate = (isoDate: string): string => {
   }).format(date);
 };
 
-export const BlogList: React.FC = () => {
-  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
+export const BlogList: React.FC<BlogListProps> = ({ selectedPostId, onSelectPost, onBackToList }) => {
+  const selectedPost: BlogPost | null = selectedPostId
+    ? BLOG_POSTS.find((post) => post.id === selectedPostId) ?? null
+    : null;
 
   if (selectedPost) {
     return (
       <div className="animate-fade-in max-w-4xl">
         <button
-          onClick={() => setSelectedPost(null)}
+          onClick={onBackToList}
           className="group flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-gray-500 mb-8 hover:text-black dark:hover:text-white transition-colors"
         >
           <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
@@ -33,7 +41,7 @@ export const BlogList: React.FC = () => {
               <time>{formatDate(selectedPost.date)}</time>
               <span>•</span>
               <div className="flex gap-2">
-                {selectedPost.tags.map(tag => (
+                {selectedPost.tags.map((tag) => (
                   <span key={tag}>#{tag}</span>
                 ))}
               </div>
@@ -77,7 +85,7 @@ export const BlogList: React.FC = () => {
           <article
             key={post.id}
             className="group cursor-pointer border-b border-gray-200 dark:border-gray-800 py-8 hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors"
-            onClick={() => setSelectedPost(post)}
+            onClick={() => onSelectPost(post.id)}
           >
             <div className="flex flex-col md:flex-row md:items-baseline gap-4 md:gap-8 mb-3">
               <div className="flex items-center gap-3 text-xs font-mono text-gray-500 uppercase tracking-widest shrink-0 w-44">

@@ -18,6 +18,11 @@ import { BLOG_POSTS } from './data/blogPosts';
 import { SOCIAL_LINKS } from './constants';
 import { ViewState } from './types';
 
+type RouteState = {
+  view: ViewState;
+  postId?: string;
+};
+
 const formatDate = (isoDate: string): string => {
   const [year, month, day] = isoDate.split('-').map(Number);
   const date = new Date(year, month - 1, day);
@@ -28,9 +33,54 @@ const formatDate = (isoDate: string): string => {
   }).format(date);
 };
 
+const readRouteFromLocation = (): RouteState => {
+  const hash = window.location.hash.replace(/^#\/?/, '').trim();
+  if (!hash) {
+    return { view: ViewState.HOME };
+  }
+
+  const [section, ...rest] = hash.split('/');
+  const sectionName = section.toLowerCase();
+
+  if (sectionName === 'journal' || sectionName === 'blog') {
+    const postId = rest.length > 0 ? decodeURIComponent(rest.join('/')) : undefined;
+    return { view: ViewState.BLOG, postId };
+  }
+
+  if (sectionName === 'research') {
+    return { view: ViewState.RESEARCH };
+  }
+
+  if (sectionName === 'code' || sectionName === 'coding') {
+    return { view: ViewState.CODING };
+  }
+
+  return { view: ViewState.HOME };
+};
+
+const routeToHash = (route: RouteState): string => {
+  if (route.view === ViewState.HOME) {
+    return '';
+  }
+
+  if (route.view === ViewState.RESEARCH) {
+    return '#research';
+  }
+
+  if (route.view === ViewState.CODING) {
+    return '#code';
+  }
+
+  if (route.view === ViewState.BLOG && route.postId) {
+    return `#journal/${encodeURIComponent(route.postId)}`;
+  }
+
+  return '#journal';
+};
+
 const App: React.FC = () => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [currentView, setCurrentView] = useState<ViewState>(ViewState.HOME);
+  const [route, setRoute] = useState<RouteState>(() => readRouteFromLocation());
 
   useEffect(() => {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -46,21 +96,48 @@ const App: React.FC = () => {
     }
   }, [darkMode]);
 
+  useEffect(() => {
+    const syncFromUrl = () => {
+      setRoute(readRouteFromLocation());
+    };
+
+    window.addEventListener('popstate', syncFromUrl);
+    window.addEventListener('hashchange', syncFromUrl);
+
+    return () => {
+      window.removeEventListener('popstate', syncFromUrl);
+      window.removeEventListener('hashchange', syncFromUrl);
+    };
+  }, []);
+
+  const navigate = (nextRoute: RouteState) => {
+    const hash = routeToHash(nextRoute);
+    const nextUrl = `${window.location.pathname}${window.location.search}${hash}`;
+    window.history.pushState(null, '', nextUrl);
+    setRoute(nextRoute);
+  };
+
+  const featuredPost = BLOG_POSTS[0] ?? null;
+  const recentPosts = BLOG_POSTS.slice(1, 7);
+
   const renderContent = () => {
-    switch (currentView) {
+    switch (route.view) {
       case ViewState.RESEARCH:
         return <PublicationList />;
       case ViewState.BLOG:
-        return <BlogList />;
+        return (
+          <BlogList
+            selectedPostId={route.postId ?? null}
+            onSelectPost={(postId) => navigate({ view: ViewState.BLOG, postId })}
+            onBackToList={() => navigate({ view: ViewState.BLOG })}
+          />
+        );
       case ViewState.CODING:
         return <ProjectList />;
       default:
         return null;
     }
   };
-
-  const featuredPost = BLOG_POSTS[0] ?? null;
-  const recentPosts = BLOG_POSTS.slice(1, 7);
 
   return (
     <div className="min-h-screen font-mono bg-white dark:bg-black text-black dark:text-white">
@@ -73,183 +150,203 @@ const App: React.FC = () => {
       </button>
 
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-        {currentView === ViewState.HOME ? (
+        {route.view === ViewState.HOME ? (
           <>
-            <header className="mb-14 border-b-2 border-black dark:border-white pb-8">
-              <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 items-end">
-                <div className="space-y-4">
-                  <p className="text-xs uppercase tracking-[0.35em] text-gray-500">Journal-first portfolio</p>
-                  <h1 className="text-5xl md:text-6xl font-sans font-bold tracking-tight leading-none">
-                    David Fraile Navarro
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 mb-16">
+              <div className="space-y-8">
+                <div className="border-b-2 border-black dark:border-white pb-8">
+                  <h1 className="text-5xl md:text-6xl font-sans font-bold mb-4 tracking-tighter uppercase leading-none">
+                    David
+                    <br />
+                    Fraile
+                    <br />
+                    Navarro
                   </h1>
-                  <p className="text-sm md:text-base text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed">
-                    Physician and generative AI researcher. Notes from current projects, clinical AI work, and technical
-                    experiments.
+                  <div className="flex items-center gap-2 font-mono text-lg text-gray-600 dark:text-gray-400 mb-3">
+                    <span className="text-black dark:text-white font-bold">&gt;</span>
+                    <p>Physician. Researcher. Builder.</p>
+                  </div>
+                  <p className="font-mono text-sm text-gray-500">
+                    Postdoctoral Research Fellow in Generative AI at Macquarie University. MBBS, PhD.
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 lg:justify-end">
-                  <button
-                    onClick={() => setCurrentView(ViewState.BLOG)}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                  <a
+                    href={SOCIAL_LINKS.twitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
                   >
-                    <BookOpen size={14} /> Journal
-                  </button>
-                  <button
-                    onClick={() => setCurrentView(ViewState.RESEARCH)}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    <Twitter size={16} />
+                    <span>Twitter</span>
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
                   >
-                    <FlaskConical size={14} /> Research
-                  </button>
-                  <button
-                    onClick={() => setCurrentView(ViewState.CODING)}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest border border-black dark:border-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    <Linkedin size={16} />
+                    <span>LinkedIn</span>
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
                   >
-                    <Code2 size={14} /> Code
-                  </button>
+                    <Github size={16} />
+                    <span>GitHub</span>
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.scholar}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  >
+                    <ExternalLink size={16} />
+                    <span>Scholar</span>
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.orcid}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  >
+                    <div className="w-4 h-4 flex items-center justify-center font-bold text-[8px] border border-current">iD</div>
+                    <span>ORCID</span>
+                  </a>
+                  <a
+                    href={SOCIAL_LINKS.huggingface}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 hover:opacity-70 transition-opacity"
+                  >
+                    <Terminal size={16} />
+                    <span>HuggingFace</span>
+                  </a>
                 </div>
               </div>
-            </header>
 
-            <div className="grid grid-cols-1 xl:grid-cols-[1.6fr_0.9fr] gap-12">
-              <main className="space-y-12">
+              <div className="flex items-start">
+                <div className="p-6 md:p-8 border-2 border-black dark:border-white bg-gray-50 dark:bg-gray-900/30 w-full">
+                  <p className="mb-4 text-sm">
+                    <span className="text-blue-600 dark:text-blue-400">function</span>{' '}
+                    <span className="text-yellow-600 dark:text-yellow-400">aboutMe</span>() {'{'}
+                  </p>
+                  <p className="pl-4 text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
+                    return "I'm a doctor who codes. I research how large language models and generative AI can transform
+                    clinical practice, from documentation to decision-making. My work spans NLP for medical text,
+                    clinical dialogue summarization, and the ethics of AI in healthcare. I also helped build Australia's
+                    COVID-19 living guidelines.";
+                  </p>
+                  <p className="mt-4 text-sm">{'}'}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t-2 border-black dark:border-white my-12" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12">
+              <div className="space-y-10">
                 {featuredPost && (
-                  <article className="space-y-5 pb-10 border-b border-gray-200 dark:border-gray-800">
-                    <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.25em] text-gray-500">
-                      <span className="font-semibold text-black dark:text-white">Latest Entry</span>
-                      <span>•</span>
+                  <article className="space-y-6">
+                    <div className="flex items-center gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                      <span>Latest</span>
+                      <span>//</span>
                       <time>{formatDate(featuredPost.date)}</time>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-sans font-bold leading-tight tracking-tight">
-                      {featuredPost.title}
-                    </h2>
+                    <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight leading-tight">{featuredPost.title}</h2>
                     {featuredPost.content.slice(0, 2).map((paragraph, idx) => (
-                      <p key={idx} className="text-gray-700 dark:text-gray-300 leading-relaxed text-base md:text-lg">
+                      <p key={idx} className="text-gray-600 dark:text-gray-400 leading-relaxed">
                         {paragraph}
                       </p>
                     ))}
-                    <div className="flex flex-wrap gap-3 pt-2">
+                    <div className="flex flex-wrap gap-4 pt-2">
                       <button
-                        onClick={() => setCurrentView(ViewState.BLOG)}
-                        className="px-4 py-2 text-xs uppercase tracking-widest border border-current hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                        onClick={() => navigate({ view: ViewState.BLOG, postId: featuredPost.id })}
+                        className="text-xs font-bold uppercase tracking-widest border border-current px-4 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
                       >
-                        Open Journal
+                        Read Entry
+                      </button>
+                      <button
+                        onClick={() => navigate({ view: ViewState.BLOG })}
+                        className="text-xs font-bold uppercase tracking-widest border border-current px-4 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                      >
+                        Journal Index
                       </button>
                       {featuredPost.externalLink && (
                         <a
                           href={featuredPost.externalLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-widest border border-current hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest border border-current px-4 py-2 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
                         >
-                          Original Post <ExternalLink size={12} />
+                          Original <ExternalLink size={12} />
                         </a>
                       )}
                     </div>
                   </article>
                 )}
+              </div>
 
-                <section className="space-y-2">
-                  <div className="flex items-baseline justify-between mb-4">
-                    <h3 className="text-2xl font-sans font-bold tracking-tight">Recent Entries</h3>
+              <aside className="space-y-6">
+                <div className="border border-gray-200 dark:border-gray-800 p-6">
+                  <h3 className="text-sm font-bold uppercase tracking-[0.2em] mb-4">Browse</h3>
+                  <div className="grid grid-cols-1 gap-2">
                     <button
-                      onClick={() => setCurrentView(ViewState.BLOG)}
-                      className="text-xs uppercase tracking-widest text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+                      onClick={() => navigate({ view: ViewState.BLOG })}
+                      className="inline-flex items-center justify-between gap-2 px-3 py-2 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
                     >
-                      View all
+                      <span className="inline-flex items-center gap-2">
+                        <BookOpen size={14} /> Journal
+                      </span>
+                      <span>&rarr;</span>
+                    </button>
+                    <button
+                      onClick={() => navigate({ view: ViewState.RESEARCH })}
+                      className="inline-flex items-center justify-between gap-2 px-3 py-2 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <FlaskConical size={14} /> Research
+                      </span>
+                      <span>&rarr;</span>
+                    </button>
+                    <button
+                      onClick={() => navigate({ view: ViewState.CODING })}
+                      className="inline-flex items-center justify-between gap-2 px-3 py-2 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Code2 size={14} /> Code
+                      </span>
+                      <span>&rarr;</span>
                     </button>
                   </div>
+                </div>
 
-                  <div className="divide-y divide-gray-200 dark:divide-gray-800 border-y border-gray-200 dark:border-gray-800">
-                    {recentPosts.map((post) => (
-                      <article key={post.id} className="py-5 group">
-                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2 md:gap-6">
-                          <div className="space-y-2">
-                            <h4 className="text-xl font-sans font-semibold leading-tight group-hover:opacity-80 transition-opacity">
-                              {post.title}
-                            </h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed max-w-3xl">{post.summary}</p>
-                          </div>
-                          <time className="text-xs uppercase tracking-widest text-gray-500 shrink-0 pt-1">
-                            {formatDate(post.date)}
-                          </time>
-                        </div>
-                      </article>
+                <div className="border border-gray-200 dark:border-gray-800 p-6">
+                  <h3 className="text-sm font-bold uppercase tracking-[0.2em] mb-4">Recent Entries</h3>
+                  <div className="space-y-4">
+                    {BLOG_POSTS.slice(0, 4).map((post) => (
+                      <button
+                        key={post.id}
+                        onClick={() => navigate({ view: ViewState.BLOG, postId: post.id })}
+                        className="block w-full text-left hover:opacity-70 transition-opacity"
+                      >
+                        <p className="text-xs text-gray-500 uppercase tracking-widest mb-1">{formatDate(post.date)}</p>
+                        <p className="text-sm leading-snug">{post.title}</p>
+                      </button>
                     ))}
                   </div>
-                </section>
-              </main>
-
-              <aside className="space-y-8">
-                <section className="border border-gray-200 dark:border-gray-800 p-6">
-                  <h3 className="text-xl font-sans font-bold mb-4">About</h3>
-                  <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                    Postdoctoral Research Fellow in Generative AI at Macquarie University (MBBS, PhD). I work on
-                    practical and safe uses of LLMs in clinical settings.
-                  </p>
-                </section>
-
-                <section className="border border-gray-200 dark:border-gray-800 p-6">
-                  <h3 className="text-xl font-sans font-bold mb-4">Connect</h3>
-                  <div className="grid grid-cols-1 gap-3 text-sm">
-                    <a
-                      href={SOCIAL_LINKS.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
-                    >
-                      <Twitter size={16} /> Twitter
-                    </a>
-                    <a
-                      href={SOCIAL_LINKS.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
-                    >
-                      <Linkedin size={16} /> LinkedIn
-                    </a>
-                    <a
-                      href={SOCIAL_LINKS.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
-                    >
-                      <Github size={16} /> GitHub
-                    </a>
-                    <a
-                      href={SOCIAL_LINKS.scholar}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
-                    >
-                      <ExternalLink size={16} /> Scholar
-                    </a>
-                    <a
-                      href={SOCIAL_LINKS.huggingface}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 hover:opacity-70 transition-opacity"
-                    >
-                      <Terminal size={16} /> HuggingFace
-                    </a>
-                  </div>
-                </section>
-
-                <section className="border border-gray-200 dark:border-gray-800 p-6 bg-gray-50 dark:bg-gray-900/20">
-                  <h3 className="text-xl font-sans font-bold mb-4">At a Glance</h3>
-                  <ul className="space-y-2 text-sm">
-                    <li>{BLOG_POSTS.length} journal posts</li>
-                    <li>30+ peer-reviewed publications</li>
-                    <li>Open-source and clinical NLP projects</li>
-                  </ul>
-                </section>
+                </div>
               </aside>
             </div>
           </>
         ) : (
           <>
             <button
-              onClick={() => setCurrentView(ViewState.HOME)}
+              onClick={() => navigate({ view: ViewState.HOME })}
               className="mb-8 text-xs font-mono uppercase tracking-widest text-gray-500 hover:text-black dark:hover:text-white transition-colors"
             >
               &larr; Back to Home
