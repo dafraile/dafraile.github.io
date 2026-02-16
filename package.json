@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "generate:posts": "python3 scripts/generate_blog_posts.py",
+    "publish:post": "python3 scripts/publish_post.py",
+    "prebuild": "npm run generate:posts",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
