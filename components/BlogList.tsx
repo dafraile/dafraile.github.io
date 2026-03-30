@@ -19,6 +19,29 @@ const formatDate = (isoDate: string): string => {
   }).format(date);
 };
 
+const renderParagraphWithLinks = (paragraph: string) => {
+  const urlPattern = /(https?:\/\/[^\s]+)/g;
+  const segments = paragraph.split(urlPattern);
+
+  return segments.map((segment, idx) => {
+    if (segment.startsWith('http://') || segment.startsWith('https://')) {
+      return (
+        <a
+          key={`${segment}-${idx}`}
+          href={segment}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-gray-400 underline-offset-4 hover:text-black dark:hover:text-white"
+        >
+          {segment}
+        </a>
+      );
+    }
+
+    return <React.Fragment key={`${idx}-${segment.slice(0, 16)}`}>{segment}</React.Fragment>;
+  });
+};
+
 export const BlogList: React.FC<BlogListProps> = ({ selectedPostId, onSelectPost, onBackToList }) => {
   const selectedPost: BlogPost | null = selectedPostId
     ? BLOG_POSTS.find((post) => post.id === selectedPostId) ?? null
@@ -52,7 +75,7 @@ export const BlogList: React.FC<BlogListProps> = ({ selectedPostId, onSelectPost
 
           <div className="space-y-6 text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-300">
             {selectedPost.content.map((paragraph, idx) => (
-              <p key={idx}>{paragraph}</p>
+              <p key={idx}>{renderParagraphWithLinks(paragraph)}</p>
             ))}
           </div>
 

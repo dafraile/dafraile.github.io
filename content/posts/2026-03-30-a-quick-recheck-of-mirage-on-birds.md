@@ -22,6 +22,10 @@ The repo's Phantom-0 system prompt matters because it is not neutral. It says: "
 
 This does not prove the whole MIRAGE paper is wrong. But it does weaken a strong reading of the headline figure. If the public code path mixes true no-prompt runs with scaffolded runs, then the resulting heatmap is not measuring a single clean construct. It is at least partly measuring prompt compliance under contradictory multimodal framing.
 
+For transparency, I pushed the scripts, memos, and raw birds artifacts from this probe to my MIRAGE fork here: https://github.com/dafraile/MIRAGE/tree/codex/birds-prompting-probe
+
+This is also not the first time I have run into this general problem. In earlier work I did around a recent Nature Medicine paper, I found a related pattern: what looked like model knowledge was often better explained as scenario-dependent prompt behavior. That earlier line of work is part of why I was skeptical that the MIRAGE bird row reflected a stable no-prompt failure mode.
+
 There are obvious limitations. This was a quick probe, not a full replication. I only ran the 10 bird questions, not the whole 200-question Phantom-0 dataset. The most important measure here, explicit visual fabrication, was manually coded. And some current API-accessible models may not match the exact snapshots used in the paper. Still, the within-question comparison is hard to ignore: the same bird questions behave very differently depending on whether you add the repo's own multimodal scaffolding.
 
 My conclusion is straightforward. I do think there is a real mirage phenomenon here. But on birds, strict no-prompt behavior is much weaker and more heterogeneous than the headline figure suggests, while the repo's own scaffolds can sharply increase hallucination rates. That distinction matters because it is the difference between measuring a stable model capability failure and measuring prompt-induced behavior.
