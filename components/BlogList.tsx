@@ -19,9 +19,9 @@ const formatDate = (isoDate: string): string => {
   }).format(date);
 };
 
-const renderParagraphWithLinks = (paragraph: string) => {
-  const urlPattern = /(https?:\/\/[^\s]+)/g;
-  const segments = paragraph.split(urlPattern);
+const renderInlineContent = (text: string) => {
+  const tokenPattern = /(`[^`]+`|https?:\/\/[^\s]+)/g;
+  const segments = text.split(tokenPattern);
 
   return segments.map((segment, idx) => {
     if (segment.startsWith('http://') || segment.startsWith('https://')) {
@@ -38,8 +38,129 @@ const renderParagraphWithLinks = (paragraph: string) => {
       );
     }
 
+    if (segment.startsWith('`') && segment.endsWith('`') && segment.length >= 2) {
+      return (
+        <code
+          key={`${segment}-${idx}`}
+          className="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-[0.9em] font-mono"
+        >
+          {segment.slice(1, -1)}
+        </code>
+      );
+    }
+
     return <React.Fragment key={`${idx}-${segment.slice(0, 16)}`}>{segment}</React.Fragment>;
   });
+};
+
+const parseTableBlock = (block: string) => {
+  const lines = block
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length < 2) {
+    return null;
+  }
+
+  if (!lines[0].startsWith('|') || !lines[1].startsWith('|')) {
+    return null;
+  }
+
+  const separatorCells = lines[1]
+    .trim()
+    .replace(/^\|/, '')
+    .replace(/\|$/, '')
+    .split('|')
+    .map((cell) => cell.trim());
+
+  const looksLikeSeparator = separatorCells.every((cell) => /^:?-{3,}:?$/.test(cell));
+  if (!looksLikeSeparator) {
+    return null;
+  }
+
+  const parseRow = (line: string) =>
+    line
+      .trim()
+      .replace(/^\|/, '')
+      .replace(/\|$/, '')
+      .split('|')
+      .map((cell) => cell.trim());
+
+  const headers = parseRow(lines[0]);
+  const rows = lines.slice(2).map(parseRow);
+
+  return { headers, rows };
+};
+
+const renderContentBlock = (block: string, idx: number) => {
+  const trimmed = block.trim();
+  const imageMatch = trimmed.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+  if (imageMatch) {
+    const [, alt, src] = imageMatch;
+    return (
+      <figure key={idx} className="space-y-3">
+        <img
+          src={src}
+          alt={alt}
+          className="w-full rounded-lg border border-gray-200 dark:border-gray-800"
+        />
+        {alt && <figcaption className="text-sm text-gray-500 dark:text-gray-400">{alt}</figcaption>}
+      </figure>
+    );
+  }
+
+  const table = parseTableBlock(trimmed);
+  if (table) {
+    return (
+      <div
+        key={idx}
+        className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-800"
+      >
+        <table className="min-w-full text-sm">
+          <thead className="bg-gray-50 dark:bg-gray-900/50">
+            <tr>
+              {table.headers.map((header, headerIdx) => (
+                <th
+                  key={`${idx}-header-${headerIdx}`}
+                  className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-200 whitespace-nowrap"
+                >
+                  {renderInlineContent(header)}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {table.rows.map((row, rowIdx) => (
+              <tr key={`${idx}-row-${rowIdx}`} className="border-t border-gray-200 dark:border-gray-800">
+                {row.map((cell, cellIdx) => (
+                  <td
+                    key={`${idx}-row-${rowIdx}-cell-${cellIdx}`}
+                    className="px-4 py-3 align-top whitespace-nowrap"
+                  >
+                    {renderInlineContent(cell)}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
+  const listLines = trimmed.split('\n').map((line) => line.trim()).filter(Boolean);
+  if (listLines.length > 0 && listLines.every((line) => line.startsWith('- '))) {
+    return (
+      <ul key={idx} className="list-disc pl-6 space-y-2">
+        {listLines.map((line, lineIdx) => (
+          <li key={`${idx}-item-${lineIdx}`}>{renderInlineContent(line.slice(2))}</li>
+        ))}
+      </ul>
+    );
+  }
+
+  return <p key={idx}>{renderInlineContent(trimmed)}</p>;
 };
 
 export const BlogList: React.FC<BlogListProps> = ({ selectedPostId, onSelectPost, onBackToList }) => {
@@ -74,9 +195,7 @@ export const BlogList: React.FC<BlogListProps> = ({ selectedPostId, onSelectPost
           </header>
 
           <div className="space-y-6 text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-300">
-            {selectedPost.content.map((paragraph, idx) => (
-              <p key={idx}>{renderParagraphWithLinks(paragraph)}</p>
-            ))}
+            {selectedPost.content.map((paragraph, idx) => renderContentBlock(paragraph, idx))}
           </div>
 
           {selectedPost.externalLink && (

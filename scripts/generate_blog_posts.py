@@ -71,6 +71,34 @@ def normalize_paragraph(paragraph: str) -> str:
     return text
 
 
+def is_image_block(block: str) -> bool:
+    stripped = block.strip()
+    return bool(re.fullmatch(r"!\[[^\]]*\]\([^)]+\)", stripped))
+
+
+def is_list_block(block: str) -> bool:
+    lines = [line.strip() for line in block.splitlines() if line.strip()]
+    return bool(lines) and all(line.startswith("- ") for line in lines)
+
+
+def is_table_block(block: str) -> bool:
+    lines = [line.strip() for line in block.splitlines() if line.strip()]
+    if len(lines) < 2:
+        return False
+    if not all(line.startswith("|") and line.endswith("|") for line in lines[:2]):
+        return False
+
+    separator_cells = [cell.strip() for cell in lines[1].strip("|").split("|")]
+    return all(re.fullmatch(r":?-{3,}:?", cell) for cell in separator_cells)
+
+
+def normalize_content_block(block: str) -> str:
+    stripped = block.strip()
+    if is_image_block(stripped) or is_list_block(stripped) or is_table_block(stripped):
+        return "\n".join(line.rstrip() for line in stripped.splitlines())
+    return normalize_paragraph(stripped)
+
+
 def parse_post(source: Path) -> ParsedPost:
     raw = source.read_text(encoding="utf-8")
     frontmatter, body = parse_frontmatter(raw, source)
@@ -87,7 +115,7 @@ def parse_post(source: Path) -> ParsedPost:
         raise PostParseError(f"{source}: invalid date '{date_value}', expected YYYY-MM-DD") from exc
 
     paragraphs = [
-        normalize_paragraph(part)
+        normalize_content_block(part)
         for part in re.split(r"\n\s*\n", body)
         if part.strip()
     ]
