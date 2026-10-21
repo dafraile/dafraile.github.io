@@ -19,7 +19,7 @@ export const ProfileSection: React.FC = () => {
           </p>
         </div>
         <p className="mt-4 font-mono text-sm text-gray-500 max-w-2xl">
-          Postdoctoral Research Fellow in Generative AI at Macquarie University. MBBS, PhD.
+          Research Fellow in Generative AI, Centre for Health Informatics, Australian Institute of Health Innovation, Macquarie University. MBBS, PhD.
         </p>
       </div>
 
@@ -61,7 +61,7 @@ export const ProfileSection: React.FC = () => {
               <span className="text-blue-600 dark:text-blue-400">function</span> <span className="text-yellow-600 dark:text-yellow-400">aboutMe</span>() &#123;
             </p>
             <p className="pl-4 text-gray-600 dark:text-gray-300">
-              return "I'm a doctor who codes. I research how large language models and generative AI can transform clinical practice—from documentation to decision-making. My work spans NLP for medical text, clinical dialogue summarization, and the ethics of AI in healthcare. I also helped build Australia's COVID-19 living guidelines.";
+              return "I'm a GP by training and a Research Fellow in Generative AI at the Centre for Health Informatics, Australian Institute of Health Innovation, Macquarie University. I study how large language models and AI agents can be evaluated and safely deployed in healthcare: clinical benchmarking, human-AI interaction, mechanistic interpretability and multi-agent systems. My recent work appears in the BMJ, NEJM AI, EMNLP and NeurIPS workshops.";
             </p>
             <p>&#125;</p>
           </div>

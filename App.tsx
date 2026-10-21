@@ -167,7 +167,7 @@ const App: React.FC = () => {
                     <p>Physician. Researcher. Builder.</p>
                   </div>
                   <p className="font-mono text-sm text-gray-500">
-                    Postdoctoral Research Fellow in Generative AI at Macquarie University. MBBS, PhD.
+                    Research Fellow in Generative AI, Centre for Health Informatics, Australian Institute of Health Innovation, Macquarie University. MBBS, PhD.
                   </p>
                 </div>
 
@@ -236,11 +236,17 @@ const App: React.FC = () => {
                     <span className="text-yellow-600 dark:text-yellow-400">aboutMe</span>() {'{'}
                   </p>
                   <p className="pl-4 text-gray-700 dark:text-gray-300 leading-relaxed text-sm md:text-base">
-                    return "I'm a doctor who codes. I research how large language models and generative AI can transform
-                    clinical practice, from documentation to decision-making. My work spans NLP for medical text,
-                    clinical dialogue summarization, and the ethics of AI in healthcare. I also helped build Australia's
-                    COVID-19 living guidelines.";
+                    return "I'm a GP by training and a Research Fellow in Generative AI at the Centre for Health
+                    Informatics, Australian Institute of Health Innovation, Macquarie University. I study how large
+                    language models and AI agents can be evaluated and safely deployed in healthcare: clinical
+                    benchmarking, human-AI interaction, mechanistic interpretability and multi-agent systems. My recent
+                    work appears in the BMJ, NEJM AI, EMNLP and NeurIPS workshops.";
                   </p>
+                  <div className="pl-4 mt-4 space-y-1 text-xs md:text-sm text-gray-500 dark:text-gray-500">
+                    <p>// 2026 Cosmos Institute grant (AI &amp; Human Autonomy) for Quorum, a multi-agent clinical deliberation prototype.</p>
+                    <p>// Co-supervisor, Macquarie–St Andrews cotutelle PhD.</p>
+                    <p>// Member, Standards Australia technical committee on AI.</p>
+                  </div>
                   <p className="mt-4 text-sm">{'}'}</p>
                 </div>
               </div>
