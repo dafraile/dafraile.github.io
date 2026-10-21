@@ -67,6 +67,14 @@ draft: true                  # optional
 One or two short paragraphs. Keep it under ~100 words.
 ```
 
+To publish a new mini-post:
+
+1. Create `content/now/YYYY-MM-DD-short-slug.md` with the frontmatter above (the filename becomes the item id).
+2. Run `npm run generate:now` and check it locally with `npm run dev` (or `npm run build`).
+3. Commit the markdown file together with the regenerated `data/nowItems.ts`, then push to `main`. The Pages deploy regenerates and publishes it.
+
+Add `draft: true` to keep an entry out of the build; preview drafts with `INCLUDE_DRAFTS=1 npm run generate:now`.
+
 ## Easy publish command
 
 Use the publish script with any markdown file path:
