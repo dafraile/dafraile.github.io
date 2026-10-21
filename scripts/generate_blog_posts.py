@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from dataclasses import dataclass
@@ -26,6 +27,7 @@ class ParsedPost:
     content: list[str]
     tags: list[str]
     external_link: str | None
+    draft: bool = False
 
 
 class PostParseError(Exception):
@@ -132,6 +134,7 @@ def parse_post(source: Path) -> ParsedPost:
     post_id = filename_stem if filename_stem else inferred_slug
 
     external_link = frontmatter.get("external_link") or None
+    draft = frontmatter.get("draft", "").strip().lower() in {"true", "yes", "1"}
 
     return ParsedPost(
         post_id=post_id,
@@ -141,6 +144,7 @@ def parse_post(source: Path) -> ParsedPost:
         content=paragraphs,
         tags=tags,
         external_link=external_link,
+        draft=draft,
     )
 
 
@@ -154,6 +158,11 @@ def generate() -> None:
 
     markdown_files = sorted(POSTS_DIR.glob("*.md"))
     parsed_posts = [parse_post(path) for path in markdown_files]
+
+    # Posts with `draft: true` in frontmatter are skipped unless INCLUDE_DRAFTS=1.
+    include_drafts = os.environ.get("INCLUDE_DRAFTS", "").strip().lower() in {"1", "true", "yes"}
+    skipped = [post for post in parsed_posts if post.draft and not include_drafts]
+    parsed_posts = [post for post in parsed_posts if include_drafts or not post.draft]
     parsed_posts.sort(key=post_sort_key, reverse=True)
 
     payload = []
@@ -178,6 +187,8 @@ def generate() -> None:
     OUTPUT_FILE.write_text(content, encoding="utf-8")
 
     print(f"Generated {OUTPUT_FILE} from {len(payload)} post(s).")
+    for post in skipped:
+        print(f"Skipped draft: {post.post_id} (set INCLUDE_DRAFTS=1 to include)")
 
 
 if __name__ == "__main__":

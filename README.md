@@ -36,6 +36,7 @@ date: 2026-02-16
 summary: One sentence summary shown in listings.
 tags: LLMs, Healthcare, Notes
 external_link: https://example.com/original-post  # optional
+draft: true  # optional; drafts are skipped unless INCLUDE_DRAFTS=1 npm run generate:posts
 ---
 
 First paragraph.
