@@ -6,10 +6,11 @@
   "scripts": {
     "generate:posts": "python3 scripts/generate_blog_posts.py",
     "publish:post": "python3 scripts/publish_post.py",
-    "prebuild": "npm run generate:posts",
+    "prebuild": "npm run generate:posts && npm run generate:now",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "generate:now": "python3 scripts/generate_now.py"
   },
   "dependencies": {
     "react-dom": "^19.2.4",

@@ -44,6 +44,29 @@ First paragraph.
 Second paragraph.
 ```
 
+## Now section (mini-posts)
+
+Short updates about papers, public repos and side projects live in
+`content/now/*.md` and are generated into `data/nowItems.ts` by
+`npm run generate:now` (also runs before production builds). The four
+newest appear on the homepage; the full list is at `#now`.
+
+```md
+---
+title: Short title
+date: 2026-10-04
+kind: paper | code | project
+summary: One sentence shown on the homepage card.
+link: https://...            # primary link (paper, demo, site); optional
+link_label: Demo             # optional; defaults to Read / Repo / Open by kind
+github: https://github.com/dafraile/...   # optional
+tags: Agents, Oversight
+draft: true                  # optional
+---
+
+One or two short paragraphs. Keep it under ~100 words.
+```
+
 ## Easy publish command
 
 Use the publish script with any markdown file path:

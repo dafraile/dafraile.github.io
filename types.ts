@@ -3,6 +3,7 @@ export enum ViewState {
   RESEARCH = 'RESEARCH',
   BLOG = 'BLOG',
   CODING = 'CODING',
+  NOW = 'NOW',
 }
 
 export interface Publication {
@@ -37,6 +38,21 @@ export interface Project {
   techStack: string[];
   group: ProjectGroup;
   link?: string;
+  github?: string;
+}
+
+export type NowKind = 'paper' | 'code' | 'project';
+
+export interface NowItem {
+  id: string;
+  title: string;
+  date: string;
+  kind: NowKind;
+  summary: string;
+  content: string[]; // short mini-post, one or two paragraphs
+  tags: string[];
+  link?: string; // primary link (paper, demo, site)
+  linkLabel?: string; // label for the primary link, defaults by kind
   github?: string;
 }
 

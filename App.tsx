@@ -10,11 +10,14 @@ import {
   BookOpen,
   FlaskConical,
   Code2,
+  Activity,
 } from 'lucide-react';
 import { PublicationList } from './components/PublicationList';
 import { BlogList } from './components/BlogList';
 import { ProjectList } from './components/ProjectList';
+import { NowList, NowItemLinks, NowKindBadge, formatNowDate } from './components/NowList';
 import { BLOG_POSTS } from './data/blogPosts';
+import { NOW_ITEMS } from './data/nowItems';
 import { SOCIAL_LINKS } from './constants';
 import { ViewState } from './types';
 
@@ -55,6 +58,10 @@ const readRouteFromLocation = (): RouteState => {
     return { view: ViewState.CODING };
   }
 
+  if (sectionName === 'now') {
+    return { view: ViewState.NOW };
+  }
+
   return { view: ViewState.HOME };
 };
 
@@ -69,6 +76,10 @@ const routeToHash = (route: RouteState): string => {
 
   if (route.view === ViewState.CODING) {
     return '#code';
+  }
+
+  if (route.view === ViewState.NOW) {
+    return '#now';
   }
 
   if (route.view === ViewState.BLOG && route.postId) {
@@ -118,7 +129,7 @@ const App: React.FC = () => {
   };
 
   const featuredPost = BLOG_POSTS[0] ?? null;
-  const recentPosts = BLOG_POSTS.slice(1, 7);
+  const latestNow = NOW_ITEMS.slice(0, 4);
 
   const renderContent = () => {
     switch (route.view) {
@@ -134,6 +145,8 @@ const App: React.FC = () => {
         );
       case ViewState.CODING:
         return <ProjectList />;
+      case ViewState.NOW:
+        return <NowList />;
       default:
         return null;
     }
@@ -254,6 +267,53 @@ const App: React.FC = () => {
 
             <div className="border-t-2 border-black dark:border-white my-12" />
 
+            {latestNow.length > 0 && (
+              <section className="mb-16">
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-4 text-xs font-mono text-gray-500 uppercase tracking-widest">
+                    <span>Now</span>
+                    <span>//</span>
+                    <span>What I'm working on</span>
+                  </div>
+                  <button
+                    onClick={() => navigate({ view: ViewState.NOW })}
+                    className="text-xs font-bold uppercase tracking-widest hover:underline underline-offset-4"
+                  >
+                    All updates &rarr;
+                  </button>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {latestNow.map((item) => (
+                    <article
+                      key={item.id}
+                      className="p-5 border border-gray-200 dark:border-gray-800 hover:border-black dark:hover:border-white transition-colors flex flex-col gap-3"
+                    >
+                      <div className="flex flex-wrap items-center gap-3 text-[10px] font-mono text-gray-500 uppercase tracking-widest">
+                        <NowKindBadge kind={item.kind} />
+                        <time>{formatNowDate(item.date)}</time>
+                      </div>
+                      <h3 className="text-lg font-sans font-bold leading-snug">
+                        {item.link ? (
+                          <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline decoration-2 underline-offset-4"
+                          >
+                            {item.title}
+                          </a>
+                        ) : (
+                          item.title
+                        )}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed flex-1">{item.summary}</p>
+                      <NowItemLinks item={item} compact />
+                    </article>
+                  ))}
+                </div>
+              </section>
+            )}
+
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-12">
               <div className="space-y-10">
                 {featuredPost && (
@@ -301,6 +361,15 @@ const App: React.FC = () => {
                 <div className="border border-gray-200 dark:border-gray-800 p-6">
                   <h3 className="text-sm font-bold uppercase tracking-[0.2em] mb-4">Browse</h3>
                   <div className="grid grid-cols-1 gap-2">
+                    <button
+                      onClick={() => navigate({ view: ViewState.NOW })}
+                      className="inline-flex items-center justify-between gap-2 px-3 py-2 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Activity size={14} /> Now
+                      </span>
+                      <span>&rarr;</span>
+                    </button>
                     <button
                       onClick={() => navigate({ view: ViewState.BLOG })}
                       className="inline-flex items-center justify-between gap-2 px-3 py-2 text-xs uppercase tracking-widest border border-gray-300 dark:border-gray-700 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors"
