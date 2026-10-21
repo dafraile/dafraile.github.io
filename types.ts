@@ -26,11 +26,16 @@ export interface BlogPost {
   externalLink?: string; // Link to original publication
 }
 
+export type ProjectGroup = 'Research code' | 'Tools' | 'Experiments & play';
+
+export const PROJECT_GROUPS: ProjectGroup[] = ['Research code', 'Tools', 'Experiments & play'];
+
 export interface Project {
   id: string;
   name: string;
   description: string;
   techStack: string[];
+  group: ProjectGroup;
   link?: string;
   github?: string;
 }

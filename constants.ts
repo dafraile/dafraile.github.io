@@ -345,40 +345,172 @@ export const PUBLICATIONS: Publication[] = [
 ];
 
 export const PROJECTS: Project[] = [
+  // Research code (newest first)
   {
-    id: 'pr1',
+    id: 'rc1',
+    name: 'swarm_friction',
+    description: 'Procedural friction as a containment mechanism for agent swarms (preliminary work, hackathon submission).',
+    techStack: ['Python', 'Multi-agent'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/swarm_friction'
+  },
+  {
+    id: 'rc2',
+    name: 'clinical_doom_loop',
+    description: 'Shared preregistration and cross-replication protocol for clinical doom-loop experiments.',
+    techStack: ['Python', 'Preregistration'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/clinical_doom_loop'
+  },
+  {
+    id: 'rc3',
+    name: 'nature_triage_expanded_replication',
+    description: 'Expanded replication analyses for AI triage benchmarking; code for the NeurIPS 2026 GenAI4Health paper on evaluation format.',
+    techStack: ['Python', 'Shell', 'Evaluation'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/nature_triage_expanded_replication'
+  },
+  {
+    id: 'rc4',
+    name: 'identity-as-a-launch-flag',
+    description: 'Assistant persona survival is determined by system-prompt injection lifecycle, not conversational history; code for the latent identity reversion preprint.',
+    techStack: ['Python', 'AI Agents'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/identity-as-a-launch-flag'
+  },
+  {
+    id: 'rc5',
+    name: 'glp1-neuropsych-safety',
+    description: 'Triangulating the GLP-1 receptor agonist neuropsychiatric safety signal across designed studies, FAERS reports and mechanistic evidence.',
+    techStack: ['Python', 'Evidence Synthesis', 'FAERS'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/glp1-neuropsych-safety'
+  },
+  {
+    id: 'rc6',
+    name: 'SAE_mad',
+    description: 'SAE-guided capability routing: exploring whether sparse autoencoder features can serve as routing signals for selective computation in LLMs; code for the EMNLP 2026 Findings paper.',
+    techStack: ['Python', 'SAE', 'Interpretability'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/SAE_mad'
+  },
+  {
+    id: 'rc7',
+    name: 'MIRAGE',
+    description: 'MIRAGE: the illusion of visual understanding in vision-language models. See the journal entry on rechecking the birds slice.',
+    techStack: ['Python', 'VLMs', 'Evaluation'],
+    group: 'Research code',
+    github: 'https://github.com/dafraile/MIRAGE',
+    link: '#journal/2026-03-30-a-quick-recheck-of-mirage-on-birds'
+  },
+  {
+    id: 'rc8',
+    name: 'Clini-dialog-sum BART/T5 on Hugging Face',
+    description: 'Fine-tuned BART and T5 models for clinical dialogue summarization, from the Scientific Reports evaluation study.',
+    techStack: ['PyTorch', 'Transformers', 'NLP'],
+    group: 'Research code',
+    github: 'https://huggingface.co/dafraile'
+  },
+
+  // Tools
+  {
+    id: 't1',
+    name: 'quorum',
+    description: 'Quorum clinical AI hackathon demo: a multi-agent clinical deliberation prototype (Cosmos Institute grant, 2026).',
+    techStack: ['TypeScript', 'HTML', 'Multi-agent'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/quorum',
+    link: 'https://dafraile.com/quorum-demo/'
+  },
+  {
+    id: 't2',
+    name: 'turboquant-mlx',
+    description: 'TurboQuant KV cache compression for MLX with fused Metal kernels: 4.6x compression at 98% FP16 speed.',
+    techStack: ['Python', 'MLX', 'Metal'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/turboquant-mlx'
+  },
+  {
+    id: 't3',
+    name: 'claude-gpu-skill',
+    description: 'Claude Code slash command for managing vast.ai GPU instances: /gpu launch, /gpu ssh, /gpu destroy.',
+    techStack: ['Python', 'Shell', 'Claude Code'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/claude-gpu-skill'
+  },
+  {
+    id: 't4',
+    name: 'omnichatty',
+    description: 'Broadcast one prompt to multiple LLM web UIs (ChatGPT, Claude, Gemini, Grok, OpenWebUI) via a local Node server and CDP.',
+    techStack: ['JavaScript', 'Node.js', 'CDP'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/omnichatty'
+  },
+  {
+    id: 't5',
+    name: 'overleaf-comment-exporter-chrome',
+    description: 'Chrome Manifest V3 port of Overleaf Comment Exporter.',
+    techStack: ['TypeScript', 'JavaScript', 'Chrome Extension'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/overleaf-comment-exporter-chrome'
+  },
+  {
+    id: 't6',
+    name: 'claude-chat-exporter',
+    description: 'A simple JavaScript tool to export Claude.ai conversations to Markdown.',
+    techStack: ['JavaScript'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/claude-chat-exporter'
+  },
+  {
+    id: 't7',
+    name: 'FIPer',
+    description: 'Sync Radio France/FIP favourites to Spotify and portable catalogues.',
+    techStack: ['Python', 'Shell', 'Spotify API'],
+    group: 'Tools',
+    github: 'https://github.com/dafraile/FIPer'
+  },
+  {
+    id: 't8',
     name: 'octOpus-bot',
-    description: 'A customized fork of Claude Code CLI with persistent agent memory, Discord integration, and multi-session coordination. Built for autonomous AI research workflows.',
-    techStack: ['TypeScript', 'Node.js', 'Claude API', 'Discord.js'],
+    description: 'Fork of OpenClaw with Claude Code CLI as the default agent, plus changes under the hood. Work in progress.',
+    techStack: ['TypeScript', 'Node.js', 'Claude Code'],
+    group: 'Tools',
     github: 'https://github.com/dafraile/octOpus-bot'
   },
+
+  // Experiments & play
   {
-    id: 'pr2',
-    name: 'Clinical-Dialogue-Summarization',
-    description: 'Scripts and pipelines for fine-tuning transformer models (BART, T5) on medical dialogue summarization tasks. Includes data preprocessing and evaluation tools.',
-    techStack: ['Python', 'PyTorch', 'Transformers', 'Shell'],
-    github: 'https://github.com/dafraile/Clinical-Dialogue-Summarization'
+    id: 'x1',
+    name: 'bloom-canvas',
+    description: 'Infinite 2D grid of AI-generated haiku. Local LLMs, spatial temperature, dada prompt injection.',
+    techStack: ['Python', 'Local LLMs'],
+    group: 'Experiments & play',
+    github: 'https://github.com/dafraile/bloom-canvas'
   },
   {
-    id: 'pr3',
-    name: 'Clini-dialog-sum-BART',
-    description: 'Fine-tuned BART model for clinical dialogue summarization. Trained to generate concise summaries of doctor-patient conversations for medical documentation.',
-    techStack: ['PyTorch', 'Transformers', 'BART', 'NLP'],
-    github: 'https://huggingface.co/dafraile/Clini-dialog-sum-BART'
+    id: 'x2',
+    name: 'Aigentization',
+    description: 'Civ V-inspired AI agent orchestration platform: hex grid, turn-based execution, city planning.',
+    techStack: ['TypeScript', 'JavaScript', 'HTML'],
+    group: 'Experiments & play',
+    github: 'https://github.com/dafraile/Aigentization'
   },
   {
-    id: 'pr4',
-    name: 'Clini-dialog-sum-T5',
-    description: 'T5-based model optimized for summarizing clinical dialogues. Designed for healthcare settings where efficient documentation is critical.',
-    techStack: ['PyTorch', 'Transformers', 'T5', 'NLP'],
-    github: 'https://huggingface.co/dafraile/Clini-dialog-sum-T5'
+    id: 'x3',
+    name: 'autoresearch',
+    description: 'AI agents running research on single-GPU nanochat training automatically.',
+    techStack: ['Python', 'Jupyter', 'nanochat'],
+    group: 'Experiments & play',
+    github: 'https://github.com/dafraile/autoresearch'
   },
   {
-    id: 'pr5',
-    name: 'dafraile.github.io',
-    description: 'Personal portfolio website built with React and Vite. Features a minimalist design with dark mode support and an AI chat assistant.',
-    techStack: ['React', 'TypeScript', 'Vite', 'Tailwind'],
-    github: 'https://github.com/dafraile/dafraile.github.io'
+    id: 'x4',
+    name: 'genai-friend-or-foe',
+    description: 'GenAI: friend or foe? Slide deck for the AIHI ECR Lunch Club.',
+    techStack: ['HTML', 'JavaScript', 'Slides'],
+    group: 'Experiments & play',
+    github: 'https://github.com/dafraile/genai-friend-or-foe'
   }
 ];
 
