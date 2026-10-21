@@ -12,6 +12,51 @@ export const SOCIAL_LINKS = {
 export const PUBLICATIONS: Publication[] = [
   // 2026
   {
+    id: 'p0a',
+    title: 'The Persona Is Still There, but Who Is Speaking? Latent Identity Reversion in Persistent AI Agents',
+    authors: 'Fraile Navarro D',
+    journal: 'arXiv preprint',
+    year: 2026,
+    link: 'https://arxiv.org/abs/2610.01490',
+    tags: ['AI Agents', 'Identity', 'Persona']
+  },
+  {
+    id: 'p0b',
+    title: 'Where Do Apparent LLM Clinical Triage Failures Arise? Localizing the Multiple-Choice Format Effect',
+    authors: 'Fraile Navarro D, Como B, Sheng J, Ananthan S, Berkovsky S',
+    journal: 'Findings of EMNLP 2026',
+    year: 2026,
+    link: 'https://arxiv.org/abs/2605.29889',
+    tags: ['Interpretability', 'SAE', 'Triage']
+  },
+  {
+    id: 'p0c',
+    title: 'Evaluation format, not only model capability, shapes measured triage failure in consumer health AI',
+    authors: 'Fraile Navarro D, Sheng J, Magrabi F, Coiera E',
+    journal: 'NeurIPS 2026 Workshop on GenAI for Health (research track)',
+    year: 2026,
+    link: 'https://arxiv.org/abs/2603.11413',
+    tags: ['Evaluation', 'Triage', 'Consumer Health AI']
+  },
+  {
+    id: 'p0d',
+    title: 'Exploring GLP-1 Drug Safety from Multiple Angles: A Toolkit for Evidence Review and Pharmacovigilance',
+    authors: 'Fraile Navarro D',
+    journal: 'NeurIPS 2026 Workshop on GenAI for Health (demonstration track)',
+    year: 2026,
+    link: 'https://openreview.net/forum?id=KSRPJtQfmM',
+    tags: ['Pharmacovigilance', 'Evidence Synthesis', 'GLP-1']
+  },
+  {
+    id: 'p0e',
+    title: 'Conversational AI for Automated Patient Questionnaire Completion: Development Insights and Design Principles',
+    authors: 'Fraile Navarro D, Peleg M',
+    journal: 'arXiv preprint (AMIA 2026 poster)',
+    year: 2026,
+    link: 'https://arxiv.org/abs/2602.19507',
+    tags: ['Conversational AI', 'Questionnaires']
+  },
+  {
     id: 'p1',
     title: 'AI Scribes: Are We Measuring What Matters?',
     authors: 'Coiera E, Fraile-Navarro D',
